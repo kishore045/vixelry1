@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vixlery - Creative Solutions Agency</title>
+    <link rel="icon" type="image/png" href="vixelry.logo.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Light Theme Base Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            /* Light gray background */
+            color: #1a202c;
+            /* Dark text color for contrast */
+        }
+
+        /* Custom scroll-snap for smooth section transitions (optional) */
+        .scroll-snap-y {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        .scroll-snap-item {
+            scroll-snap-align: start;
+        }
+
+        /* Keyframe animations for subtle effects */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceIn {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Marquee Animation */
+        @keyframes marquee-rtl {
+
+            /* Start with the content's right edge aligned with the container's right edge */
+            0% {
+                transform: translateX(0);
+            }
+
+            /* Move left by the full width of one set of content */
+            100% {
+                transform: translateX(-50%);
+            }
+
+            /* This moves it by half the total track width (one content copy) */
+        }
+
+        .marquee-track {
+            animation: marquee-rtl 30s linear infinite;
+            /* Adjust duration for speed */
+            white-space: nowrap;
+            /* Ensure content stays on one line */
+            display: flex;
+            /* Use flexbox to keep items inline */
+            position: absolute;
+            /* Position relative to the container */
+            top: 0;
+            height: 100%;
+            align-items: center;
+            /* Position the track to the right, so its content starts visible */
+            right: 0;
+            /* Align the right edge of the track with the container's right edge */
+            width: fit-content;
+            /* Allow track to fit content, then animate it */
+        }
+
+        .marquee-content {
+            flex-shrink: 0;
+            /* Prevent content from shrinking */
+            /* Each .marquee-content will be one copy of the news. */
+            /* Its width will be defined by its content */
+        }
+
+        /* Fixed position for the news ticker at the bottom */
+        .news-ticker-fixed {
+            position: fixed;
+            /* நிலைத்த நிலை */
+            bottom: 0;
+            /* திரையின் அடிப்பகுதியில் */
+            left: 0;
+            /* இடது விளிம்பில் */
+            right: 0;
+            /* வலது விளிம்பில் */
+            z-index: 999;
+            /* மற்ற உள்ளடக்கங்களுக்கு மேலே இருக்க */
+            margin: 0;
+            /* தேவையற்ற மார்ஜினை நீக்குகிறது */
+            border-radius: 0;
+            /* முழு அகலத்திற்கு வட்டமான மூலைகளை நீக்குகிறது */
+            overflow: hidden;
+            /* Hide content that is outside the visible area */
+        }
+
+        /* Ensure the inner container of the news ticker also hides overflow */
+        #news-ticker .container {
+            overflow: hidden;
+            position: relative;
+            /* For absolute positioning of marquee-track */
+        }
+
+        .animate-fade-in-down {
+            animation: fadeInDown 1s ease-out forwards;
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        .animate-bounce-in {
+            animation: bounceIn 1s infinite;
+        }
+
+        /* Changed to infinite for continuous subtle bounce */
+
+        /* Responsive video container for 16:9 aspect ratio */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            /* rounded-xl */
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .course-nav-item {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border-left: 3px solid transparent;
+        }
+
+        .course-nav-item.active {
+            background-color: #e5f1ff;
+            border-left: 3px solid #3b82f6;
+            color: #1a202c;
+            font-weight: 600;
+        }
+
+        .course-nav-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        .course-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .course-section.active {
+            display: block;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Styles for expandable modules and lessons */
+        .module-content,
+        .lesson-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+
+        .module-content.expanded,
+        .lesson-content.expanded {
+            max-height: 1000px;
+            /* Increased to accommodate content */
+        }
+
+        .module-header,
+        .lesson-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .module-arrow,
+        .lesson-arrow {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .module-arrow.rotate,
+        .lesson-arrow.rotate {
+            transform: rotate(90deg);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.75rem;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body class="scroll-snap-y">
+
+    <!-- Header Section (Dark Theme) -->
+    <header class=" fixed top-0 left-0 right-0 z-50 bg-white shadow-sm py-4 ">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <!-- Logo/Site Title -->
+            <a href="index.html" class="flex items-centers">
+                <img src="vixelry.png" alt="Vixelry Logo"
+                    class="h-30 md:h-32 md:h-20 max-w-[120px] md:max-w-[160px] lg:max-w-[200px] w-full h-auto">
+            </a>
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html"
+                    class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Home</a>
+                <a href="services.html"
+                    class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Services</a>
+                <a href="about-us.html"
+                    class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">About
+                    Us</a>
+                <a href="categories.html"
+                    class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Categories</a>
+                <a href="contact.html"
+                    class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Contact</a>
+            </nav>
+            <!-- + login/signup buttons (paste inside existing desktop <nav>) -->
+<div class="flex items-center space-x-2">
+    <button id="loginBtn" class="text-gray-600 hover:text-blue-600 font-medium py-2 px-3">
+        Login
+    </button>
+
+    <button id="signupBtn" class="text-white bg-blue-600 hover:bg-blue-700 font-medium py-2 px-4 rounded">
+        Sign up
+    </button>
+</div>
+
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-gray-700 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile Navigation Overlay -->
+        <div id="mobile-menu"
+            class="hidden md:hidden fixed inset-0 bg-gray-900 bg-opacity-95 z-40 flex flex-col items-center justify-center space-y-6">
+            <button id="close-mobile-menu" class="absolute top-4 right-4 p-2 rounded-md hover:bg-gray-700 transition">
+                <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+                <!-- mobile menu auth links -->
+
+            </button>
+
+            
+
+            
+            <a href="index.html"
+                class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Home</a>
+            <a href="services.html"
+                class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Services</a>
+            <a href="about-us.html"
+                class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">About Us</a>
+            <a href="categories.html"
+                class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Categories</a>
+            <a href="contact.html"
+                class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Contact</a>
+        </div>
+    </header>
+
+    <!-- Hero Section (Light Theme - Solid Background) -->
+    <section id="home"
+        class="scroll-snap-item relative h-screen bg-white flex items-center justify-center text-gray-800 p-8 rounded-lg shadow-lg ">
+        <div class="text-center max-w-4xl">
+            <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6 animate-fade-in-down">
+                Creative <span class="text-blue-600">Digital Experiences</span> That Resonate.
+            </h1>
+            <p class="text-lg md:text-xl mb-8 opacity-90 animate-fade-in-up">
+                We bring your vision to life with exceptional UI/UX, impactful digital marketing, and captivating video
+                content.
+            </p>
+            <a href="#services"
+                class="bg-blue-600 text-white hover:bg-blue-700 px-8 py-4 rounded-full text-lg font-semibold shadow-xl transition transform hover:scale-105">
+                Explore Our Services
+            </a>
+        </div>
+    </section>
+
+    <!-- Services Section (Light Theme) -->
+    <section id="services" class="scroll-snap-item py-20 bg-white rounded-lg shadow-lg m-4">
+        <div class="container mx-auto px-8 text-center">
+            <h2 class="text-4xl font-bold text-gray-800 mb-12">Our Core Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- UI/UX Design Card -->
+                <div
+                    class="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-2">
+                    <div class="text-green-500 mb-4">
+                        <!-- UI/UX Design Icon (Pen Tool / Design) -->
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.232z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-4">UI/UX Design</h3>
+                    <p class="text-gray-600">Creating intuitive and engaging user interfaces and experiences that
+                        delight your audience and drive conversions.</p>
+                </div>
+
+                <!-- Digital Marketing Card -->
+                <div
+                    class="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-2">
+                    <div class="text-blue-500 mb-4">
+                        <!-- Digital Marketing Icon (Bar Chart / Analytics) -->
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-4">Digital Marketing</h3>
+                    <p class="text-gray-600">Strategizing and executing data-driven campaigns to boost your online
+                        presence, leads, and sales.</p>
+                </div>
+
+                <!-- Video Editing Card -->
+                <div
+                    class="bg-gray-50 p-8 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-2">
+                    <div class="text-red-500 mb-4">
+                        <!-- Video Editing Icon (Play Button / Film Reel) -->
+                        <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14.752 11.168l-3.197 2.132A1 1 0 0110 13.82V10.18a1 1 0 011.555-.832l3.197 2.132a1 1 0 010 1.664z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-4">Video Editing</h3>
+                    <p class="text-gray-600">Producing compelling video content, from concept to final cut, that tells
+                        your story effectively.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section (Light Theme with fixed content) -->
+    <section id="portfolio" class="scroll-snap-item py-20 bg-gray-100 rounded-lg shadow-lg m-4">
+        <div class="container mx-auto px-8 text-center">
+            <h2 class="text-4xl font-bold text-gray-800 mb-12">Our Recent Work</h2>
+            <p class="text-lg text-gray-600 mb-8">Showcasing our diverse projects in UI/UX, Digital Marketing, and Video
+                Production.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> <!-- Reduced gap to gap-6 -->
+                <!-- Initially visible Portfolio Items -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden w-full">
+                    <img src="https://placehold.co/600x400/E0F2F7/0288D1?text=UI/UX+Project+Alpha"
+                        alt="UI/UX Project Alpha" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Mobile App Redesign (Alpha)</h3>
+                        <p class="text-gray-600">A complete overhaul of an e-commerce mobile application for enhanced
+                            user experience.</p>
+                        <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">View Case Study</a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md overflow-hidden w-full">
+                    <img src="https://placehold.co/600x400/F0F4C3/FBC02D?text=Digital+Campaign+Beta"
+                        alt="Digital Marketing Campaign Beta" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Lead Generation Campaign (Beta)</h3>
+                        <p class="text-gray-600">Successful digital marketing strategy resulting in a 30% increase in
+                            qualified leads.</p>
+                        <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">View Details</a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md overflow-hidden w-full">
+                    <img src="https://placehold.co/600x400/FFEBEE/D32F2F?text=Video+Production+Gamma"
+                        alt="Video Production Gamma" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Brand Story Video (Gamma)</h3>
+                        <p class="text-gray-600">A compelling brand narrative video that significantly boosted audience
+                            engagement.</p>
+                        <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">Watch Video</a>
+                    </div>
+                </div>
+
+                <!-- Hidden Portfolio Items -->
+                <div id="more-portfolio-items"
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden col-span-full">
+                    <!-- Reduced gap to gap-6 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden w-full">
+                        <img src="https://placehold.co/600x400/E0F2F7/0288D1?text=UI/UX+Project+Delta"
+                            alt="UI/UX Project Delta" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Website Redesign (Delta)</h3>
+                            <p class="text-gray-600">Modernizing a corporate website for improved aesthetics and
+                                functionality.</p>
+                            <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">View Case Study</a>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden w-full">
+                        <img src="https://placehold.co/600x400/F0F4C3/FBC02D?text=Digital+Campaign+Epsilon"
+                            alt="Digital Marketing Campaign Epsilon" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Social Media Strategy (Epsilon)</h3>
+                            <p class="text-gray-600">Developing and implementing a comprehensive social media marketing
+                                plan.</p>
+                            <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">View Details</a>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden w-full">
+                        <img src="https://placehold.co/600x400/FFEBEE/D32F2F?text=Video+Production+Zeta"
+                            alt="Video Production Zeta" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Animated Explainer Video (Zeta)</h3>
+                            <p class="text-gray-600">Creating a concise and engaging animated video to explain complex
+                                services.</p>
+                            <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">Watch Video</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button id="togglePortfolio"
+                class="mt-12 bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-xl hover:bg-blue-700 transition transform hover:scale-105">
+                View All Projects
+            </button>
+        </div>
+    </section>
+
+    <!-- Videos Section (Light Theme) -->
+    <section id="videos" class="scroll-snap-item py-20 bg-white rounded-lg shadow-lg m-4">
+        <div class="container mx-auto px-8 text-center">
+            <h2 class="text-4xl font-bold text-gray-800 mb-12">Featured Videos</h2>
+            <p class="text-lg text-gray-600 mb-8">Check out some of our recent video projects and client testimonials.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6"> <!-- Reduced gap to gap-6 -->
+                <!-- Initially visible Videos -->
+                <div class="bg-gray-50 rounded-xl shadow-md overflow-hidden p-4 w-full">
+                    <div class="video-container">
+                        <iframe width="560" height="315"
+                            src="https://www.youtube.com/embed/TqGUE-i8I3w?si=h5sXms_8Br5axhWL"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Javascript Variables</h3>
+                    <p class="text-gray-600">Are you new to JavaScript? Understanding variables is the first and most
+                        crucial step on your coding journey! In this video, we'll demystify JavaScript variables,
+                        explaining the differences between var, let, and const.</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl shadow-md overflow-hidden p-4 w-full">
+                    <div class="video-container">
+                        <iframe width="560" height="315"
+                            src="https://www.youtube.com/embed/yDKYr8hqLek?si=v5OF-EX4v4vTpow-"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Guide to Deploying</h3>
+                    <p class="text-gray-600">This guide provides a beginner-friendly walkthrough on how to deploy a
+                        website to the internet using GitHub and Netlify. You will learn how to upload your project code
+                        to GitHub using Git commands, connect your GitHub repository to Netlify, and automatically
+                        deploy updates whenever you push changes. Ideal for students and developers using HTML/CSS or
+                        frontend frameworks, this document simplifies the complete workflow from local development to
+                        live hosting.</p>
+                </div>
+
+                <!-- Hidden Videos -->
+                <div id="more-video-items" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden col-span-full">
+                    <!-- Reduced gap to gap-6 -->
+                    <div class="bg-gray-50 rounded-xl shadow-md overflow-hidden p-4 w-full">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" title="YouTube video player"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Explainer Video</h3>
+                        <p class="text-gray-600">A short, engaging video explaining a complex service or product.</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl shadow-md overflow-hidden p-4 w-full">
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/2g811Eo7K8U" title="YouTube video player"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Event Highlights</h3>
+                        <p class="text-gray-600">Capturing the best moments from a recent industry event.</p>
+                    </div>
+                </div>
+            </div>
+            <button id="toggleVideos"
+                class="mt-12 bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-xl hover:bg-blue-700 transition transform hover:scale-105">
+                View All Videos
+            </button>
+        </div>
+    </section>
+
+    <!-- Main Course Container -->
+    <div class="container mx-auto mt-8 p-4 md:p-8">
+        <!-- Hero Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6 md:p-12 mb-8">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between">
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 leading-tight">UI/UX Fundamentals</h1>
+                    <p class="mt-2 text-lg text-gray-600">Master the foundational concepts of user-centered design.</p>
+                </div>
+                <div class="mt-6 md:mt-0">
+                    <button id="enroll-button"
+                        class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-xl hover:bg-red-700 transition transform hover:scale-105">
+                        Enroll
+                    </button>
+                </div>
+            </div>
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-gray-600">
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4a1 1 0 00-1.414-1.414L11 10.586V7z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>Beginner-friendly</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fill-rule="evenodd"
+                            d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>6-week course</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 10.586V6z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>~20 hours of content</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Layout - Initially Hidden -->
+        <div id="course-details-section" class="hidden flex flex-col md:flex-row mt-8 gap-8">
+            <!-- Left Sticky Sidebar for Navigation -->
+            <div class="w-full md:w-1/4 sticky top-24 h-fit bg-white p-6 rounded-xl shadow-lg">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Course Content</h3>
+                <nav>
+                    <ul class="space-y-2 text-gray-700">
+                        <li id="nav-learn" class="course-nav-item p-3 rounded-lg active">What you will learn</li>
+                        <li id="nav-topics" class="course-nav-item p-3 rounded-lg">Course Topics</li>
+                        <li id="nav-staff" class="course-nav-item p-3 rounded-lg">Course Staff</li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Right Main Content Panel -->
+            <div class="w-full md:w-3/4 bg-white p-6 rounded-xl shadow-lg">
+                <!-- Section: What you will learn -->
+                <div id="section-learn" class="course-section active">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">What you will learn</h2>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li>Develop a strong understanding of user-centered design principles.</li>
+                        <li>Learn how to conduct user research and create effective user personas.</li>
+                        <li>Master essential wireframing and prototyping techniques using modern tools.</li>
+                        <li>Gain proficiency in creating visually appealing and intuitive user interfaces.</li>
+                        <li>Understand the complete UI/UX design process from concept to final handoff.</li>
+                    </ul>
+                </div>
+
+                <!-- Section: Course Topics -->
+                <div id="section-topics" class="course-section">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Course Topics</h2>
+                    <div class="space-y-6 max-h-[calc(100vh-25rem)] overflow-y-auto pr-2">
+                        <!-- Module 1 -->
+                        <div class="p-4 bg-gray-50 rounded-lg shadow">
+                            <div class="module-header" data-target="module-1-details">
+                                <h3 class="font-bold text-lg text-gray-800">Module 1: Introduction to UI/UX</h3>
+                                <svg class="module-arrow h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                            <div id="module-1-details" class="module-content">
+                                <ul class="list-none space-y-2 text-gray-600 mt-4">
+                                    <li class="p-2 border-b border-gray-200">
+                                        <div class="lesson-header" data-target="lesson-1-1">
+                                            <h4 class="font-medium text-gray-800">Lesson 1.1: What is UI/UX?</h4>
+                                            <svg class="lesson-arrow h-5 w-5 text-gray-500"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </div>
+                                        <div id="lesson-1-1" class="lesson-content mt-2">
+                                            <div class="space-y-4">
+                                                <h5 class="font-semibold text-gray-700">Video Lesson:</h5>
+                                                <div class="video-container">
+                                                    <iframe src="https://www.youtube.com/embed/S2C_P6z9x3I"
+                                                        title="YouTube video player" frameborder="0"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowfullscreen></iframe>
+                                                </div>
+                                                <a href="https://www.w3.org/WAI/fundamentals/accessibility-principles/"
+                                                    target="_blank"
+                                                    class="text-blue-600 hover:underline flex items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1"
+                                                        viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 12h8V7.414L10.586 5H6v11zM11 6a1 1 0 10-2 0v2H8a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V6z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    Download PDF: UI/UX Basics
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="p-2 border-b border-gray-200">
+                                        <div class="lesson-header" data-target="lesson-1-2">
+                                            <h4 class="font-medium text-gray-800">Lesson 1.2: Design Principles</h4>
+                                            <svg class="lesson-arrow h-5 w-5 text-gray-500"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </div>
+                                        <div id="lesson-1-2" class="lesson-content mt-2">
+                                            <div class="space-y-4">
+                                                <h5 class="font-semibold text-gray-700">Video Lesson:</h5>
+                                                <div class="video-container">
+                                                    <iframe src="https://www.youtube.com/embed/S2C_P6z9x3I"
+                                                        title="YouTube video player" frameborder="0"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowfullscreen></iframe>
+                                                </div>
+                                                <a href="https://www.w3.org/WAI/fundamentals/accessibility-principles/"
+                                                    target="_blank"
+                                                    class="text-blue-600 hover:underline flex items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1"
+                                                        viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 12h8V7.414L10.586 5H6v11zM11 6a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 10.586V6z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    Download PDF: Key Design Principles
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Module 2 -->
+                        <div class="p-4 bg-gray-50 rounded-lg shadow">
+                            <div class="module-header" data-target="module-2-details">
+                                <h3 class="font-bold text-lg text-gray-800">Module 2: User Research and Analysis</h3>
+                                <svg class="module-arrow h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                            <div id="module-2-details" class="module-content">
+                                <ul class="list-none space-y-2 text-gray-600 mt-4">
+                                    <li class="p-2 border-b border-gray-200">
+                                        <div class="lesson-header" data-target="lesson-2-1">
+                                            <h4 class="font-medium text-gray-800">Lesson 2.1: Conducting User Research
+                                            </h4>
+                                            <svg class="lesson-arrow h-5 w-5 text-gray-500"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </div>
+                                        <div id="lesson-2-1" class="lesson-content mt-2">
+                                            <div class="space-y-4">
+                                                <h5 class="font-semibold text-gray-700">Video Lesson:</h5>
+                                                <div class="video-container">
+                                                    <iframe src="https://www.youtube.com/embed/M23v8i8-oE0"
+                                                        title="YouTube video player" frameborder="0"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowfullscreen></iframe>
+                                                </div>
+                                                <a href="https://www.w3.org/WAI/fundamentals/accessibility-principles/"
+                                                    target="_blank"
+                                                    class="text-blue-600 hover:underline flex items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1"
+                                                        viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 12h8V7.414L10.586 5H6v11zM11 6a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 10.586V6z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    Download PDF: User Research Methods
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="p-2 border-b border-gray-200">
+                                        <div class="lesson-header" data-target="lesson-2-2">
+                                            <h4 class="font-medium text-gray-800">Lesson 2.2: User Personas</h4>
+                                            <svg class="lesson-arrow h-5 w-5 text-gray-500"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </div>
+                                        <div id="lesson-2-2" class="lesson-content mt-2">
+                                            <div class="space-y-4">
+                                                <h5 class="font-semibold text-gray-700">Video Lesson:</h5>
+                                                <div class="video-container">
+                                                    <iframe src="https://www.youtube.com/embed/M23v8i8-oE0"
+                                                        title="YouTube video player" frameborder="0"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowfullscreen></iframe>
+                                                </div>
+                                                <a href="https://www.w3.org/WAI/fundamentals/accessibility-principles/"
+                                                    target="_blank"
+                                                    class="text-blue-600 hover:underline flex items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1"
+                                                        viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 12h8V7.414L10.586 5H6v11zM11 6a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 10.586V6z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    Download PDF: User Personas Guide
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Module 3 -->
+                        <div class="p-4 bg-gray-50 rounded-lg shadow">
+                            <div class="module-header" data-target="module-3-details">
+                                <h3 class="font-bold text-lg text-gray-800">Module 3: Prototyping and Wireframing</h3>
+                                <svg class="module-arrow h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                            <div id="module-3-details" class="module-content">
+                                <ul class="list-none space-y-2 text-gray-600 mt-4">
+                                    <li class="p-2 border-b border-gray-200">
+                                        <div class="lesson-header" data-target="lesson-3-1">
+                                            <h4 class="font-medium text-gray-800">Lesson 3.1: Intro to Figma</h4>
+                                            <svg class="lesson-arrow h-5 w-5 text-gray-500"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </div>
+                                        <div id="lesson-3-1" class="lesson-content mt-2">
+                                            <div class="space-y-4">
+                                                <h5 class="font-semibold text-gray-700">Video Lesson:</h5>
+                                                <div class="video-container">
+                                                    <iframe src="https://www.youtube.com/embed/d2-28iV4a9o"
+                                                        title="YouTube video player" frameborder="0"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowfullscreen></iframe>
+                                                </div>
+                                                <a href="https://www.w3.org/WAI/fundamentals/accessibility-principles/"
+                                                    target="_blank"
+                                                    class="text-blue-600 hover:underline flex items-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1"
+                                                        viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 12h8V7.414L10.586 5H6v11zM11 6a1 1 0 10-2 0v2H8a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V6z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    Download PDF: Figma for Beginners
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Course Staff -->
+                <div id="section-staff" class="course-section">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Course Staff</h2>
+                    <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg shadow">
+                        <img class="h-16 w-16 rounded-full object-cover" src="https://placehold.co/100x100"
+                            alt="Instructor Profile">
+                        <div>
+                            <h4 class="font-bold text-lg text-gray-800">Jane Doe</h4>
+                            <p class="text-gray-600">Lead UI/UX Designer at Creative Solutions Agency</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const enrollButton = document.getElementById('enroll-button');
+            const courseDetailsSection = document.getElementById('course-details-section');
+
+            const navItems = document.querySelectorAll('.course-nav-item');
+            const sections = document.querySelectorAll('.course-section');
+
+            // Function to handle showing the course details section
+            enrollButton.addEventListener('click', () => {
+                courseDetailsSection.classList.remove('hidden');
+                setTimeout(() => {
+                    courseDetailsSection.classList.add('active');
+                }, 10);
+            });
+
+            // Function to handle switching between left-nav sections
+            function showSection(id) {
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                    section.style.display = 'none';
+                });
+                const targetSection = document.getElementById(`section-${id}`);
+                if (targetSection) {
+                    targetSection.style.display = 'block';
+                    setTimeout(() => {
+                        targetSection.classList.add('active');
+                    }, 10);
+                }
+            }
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                    showSection(item.id.split('-')[1]);
+                });
+            });
+
+            // Handle expandable modules
+            const moduleHeaders = document.querySelectorAll('.module-header');
+            moduleHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const arrow = header.querySelector('.module-arrow');
+
+                    if (content.classList.contains('expanded')) {
+                        content.classList.remove('expanded');
+                        arrow.classList.remove('rotate');
+                    } else {
+                        // Close other expanded modules and lessons
+                        document.querySelectorAll('.module-content.expanded').forEach(item => item.classList.remove('expanded'));
+                        document.querySelectorAll('.module-arrow.rotate').forEach(item => item.classList.remove('rotate'));
+                        document.querySelectorAll('.lesson-content.expanded').forEach(item => item.classList.remove('expanded'));
+                        document.querySelectorAll('.lesson-arrow.rotate').forEach(item => item.classList.remove('rotate'));
+
+                        content.classList.add('expanded');
+                        arrow.classList.add('rotate');
+                    }
+                });
+            });
+
+            // Handle expandable lessons
+            const lessonHeaders = document.querySelectorAll('.lesson-header');
+            lessonHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const arrow = header.querySelector('.lesson-arrow');
+
+                    if (content.classList.contains('expanded')) {
+                        content.classList.remove('expanded');
+                        arrow.classList.remove('rotate');
+                    } else {
+                        // Close other expanded lessons within the same module
+                        const expandedLessons = header.closest('.module-content').querySelectorAll('.lesson-content.expanded');
+                        expandedLessons.forEach(item => item.classList.remove('expanded'));
+                        const rotatedArrows = header.closest('.module-content').querySelectorAll('.lesson-arrow.rotate');
+                        rotatedArrows.forEach(item => item.classList.remove('rotate'));
+
+                        content.classList.add('expanded');
+                        arrow.classList.add('rotate');
+                    }
+                });
+            });
+
+            // Initially show the 'learn' section on content load
+            showSection('learn');
+        });
+    </script>
+
+    <!-- About Us Section (Light Theme) -->
+    <section id="about" class="scroll-snap-item py-20 bg-white rounded-lg shadow-lg m-4">
+        <div class="container mx-auto px-8 text-center max-w-3xl">
+            <h2 class="text-4xl font-bold text-gray-800 mb-8">About Our Agency</h2>
+            <p class="text-lg text-gray-600 leading-relaxed mb-6">
+                We are a passionate team of creative professionals dedicated to delivering outstanding digital
+                solutions.
+                With years of experience in UI/UX design, strategic digital marketing, and high-quality video
+                production,
+                we partner with businesses to achieve their online goals and create lasting impressions.
+            </p>
+            <p class="text-lg text-gray-600 leading-relaxed">
+                Our philosophy is rooted in understanding your unique needs and crafting tailor-made strategies that
+                not only look good but also perform exceptionally. Let's build something amazing together!
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section (Dark Theme) -->
+    <section id="contact" class="scroll-snap-item py-20 bg-gray-800 rounded-lg shadow-lg m-4">
+        <div class="container mx-auto px-8 text-center max-w-2xl">
+            <h2 class="text-4xl font-bold text-white mb-8">Get in Touch</h2>
+            <p class="text-lg text-gray-300 mb-8">Ready to start your next project? Send us your email!</p>
+            <form class="space-y-6">
+                <div>
+                    <input type="email" placeholder="Your Email"
+                        class="w-full p-4 border border-gray-600 bg-gray-700 text-white rounded-lg focus:ring-blue-500 focus:border-blue-500 transition"
+                        required>
+                </div>
+                <button type="submit"
+                    class="bg-green-600 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-xl hover:bg-green-700 transition transform hover:scale-105">
+                    Send Email
+                </button>
+            </form>
+        </div>
+        <div id="whatsappButton"
+            class="fixed bottom-20 right-10 bg-white rounded-full animate-bounce transition translate-x-2 "><button
+                type="button" class="flex justify-center items-center"><svg stroke="currentColor" fill="currentColor"
+                    stroke-width="0" viewBox="0 0 24 24" class="text-green-500  text-5xl lg:text-7xl " height="1em"
+                    width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.001 2C17.5238 2 22.001 6.47715 22.001 
+                    12C22.001 17.5228 17.5238 22 12.001 22C10.1671 22 8.44851 21.5064 6.97086 20.6447L2.00516 
+                    22L3.35712 17.0315C2.49494 15.5536 2.00098 13.8345 2.00098 12C2.00098 6.47715 6.47813 2 12.001 2ZM8.59339
+                     7.30019L8.39232 7.30833C8.26293 7.31742 8.13607 7.34902 8.02057 7.40811C7.93392 7.45244 7.85348 7.51651 
+                     7.72709 7.63586C7.60774 7.74855 7.53857 7.84697 7.46569 7.94186C7.09599 8.4232 6.89729 9.01405 6.90098 
+                     9.62098C6.90299 10.1116 7.03043 10.5884 7.23169 11.0336C7.63982 11.9364 8.31288 12.8908 9.20194 
+                     13.7759C9.4155 13.9885 9.62473 14.2034 9.85034 14.402C10.9538 15.3736 12.2688 16.0742 13.6907 
+                     16.4482C13.6907 16.4482 14.2507 16.5342 14.2589 16.5347C14.4444 16.5447 14.6296 16.5313 14.8153 
+                     16.5218C15.1066 16.5068 15.391 16.428 15.6484 16.2909C15.8139 16.2028 15.8922 16.159 16.0311 16.0714C16.0311
+                      16.0714 16.0737 16.0426 16.1559 15.9814C16.2909 15.8808 16.3743 15.81 16.4866 15.6934C16.5694 15.6074
+                       16.6406 15.5058 16.6956 15.3913C16.7738 15.2281 16.8525 14.9166 16.8838 14.6579C16.9077 14.4603 16.9005
+                        14.3523 16.8979 14.2854C16.8936 14.1778 16.8047 14.0671 16.7073 14.0201L16.1258 13.7587C16.1258 13.7587
+                         15.2563 13.3803 14.7245 13.1377C14.6691 13.1124 14.6085 13.1007 14.5476 13.097C14.4142 13.0888 14.2647
+                          13.1236 14.1696 13.2238C14.1646 13.2218 14.0984 13.279 13.3749 14.1555C13.335 14.2032 13.2415 14.3069
+                           13.0798 14.2972C13.0554 14.2955 13.0311 14.292 13.0074 14.2858C12.9419 14.2685 12.8781 14.2457 12.8157 14.2193C12.692 14.1668 12.6486 14.1469 12.5641 14.1105C11.9868 13.8583 11.457 13.5209 10.9887 13.108C10.8631 12.9974 10.7463 12.8783 10.6259 12.7616C10.2057 12.3543 9.86169 11.9211 9.60577 11.4938C9.5918 11.4705 9.57027 11.4368 9.54708 11.3991C9.50521 11.331 9.45903 11.25 9.44455 11.1944C9.40738 11.0473 9.50599
+                            10.9291 9.50599 10.9291C9.50599 10.9291 9.74939 10.663 9.86248 10.5183C9.97128 10.379
+                             10.0652 10.2428 10.125 10.1457C10.2428 9.95633 10.2801 9.76062 10.2182 9.60963C9.93764 8.92565
+                              9.64818 8.24536 9.34986 7.56894C9.29098
+                            7.43545 9.11585 7.33846 8.95659 7.32007C8.90265 7.31384 8.84875 7.30758 8.79459 7.30402C8.66053
+                             7.29748 8.5262 7.29892 8.39232 7.30833L8.59339 7.30019Z">
+                    </path>
+                </svg></button></div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const whatsappButton = document.getElementById('whatsappButton');
+
+                if (whatsappButton) {
+                    whatsappButton.addEventListener('click', function () {
+                        const phoneNumber = '8667089505'; // <-- Update your number here
+                        const whatsappLink = `https://wa.me/${phoneNumber}`;
+
+                        window.open(whatsappLink, '_blank');
+                    });
+                }
+            });
+
+
+        </script>
+        <div id="emailButton"
+            class="fixed bottom-32 right-10 bg-white rounded-full animate-bounce transition translate-x-2 cursor-pointer">
+            <button type="button" class="flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="text-red-500 text-5xl lg:text-7xl"
+                    viewBox="0 0 24 24" width="1em" height="1em">
+                    <path
+                        d="M20 4H4C2.89 4 2.01 4.9 2.01 6L2 18c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                </svg>
+            </button>
+            <script>
+                document.getElementById('emailButton').addEventListener('click', function () {
+                    const email = 'vixlery@gmail.com';
+                    const subject = 'Inquiry from Website';
+                    const body = 'Hello, I would like to know more about your services.';
+
+                    const gmailLink = `https://mail.google.com/mail/?view=cm&to=${email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+                    window.open(gmailLink, '_blank');
+                });
+            </script>
+        </div>
+
+    </section>
+
+    <section id="news-ticker"
+        class="py-4 py-4 bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-lg news-ticker-fixed">
+        <div class="container mx-auto px-4 relative h-8 flex items-center">
+            <span class="font-bold mr-4 flex-shrink-0"></span>
+            <div class="marquee-track absolute left-0 top-0 h-full flex items-center">
+                <div class="marquee-content flex-shrink-0">
+                    <span class="mx-8">✨ New UI/UX Case Study Released! Check out our latest design project.</span>
+                    <span class="mx-8">📈 Digital Marketing Workshop on SEO Trends - Register Now!</span>
+                    <span class="mx-8">🎬 Exciting New Video Production Service Launched! Contact us for details.</span>
+                    <span class="mx-8">🚀 Expanding Our Team! We're hiring talented designers and marketers.</span>
+                </div>
+                <div class="marquee-content flex-shrink-0">
+                    <!-- Duplicate content for seamless loop -->
+                    <span class="mx-8">✨ New UI/UX Case Study Released! Check out our latest design project.</span>
+                    <span class="mx-8">📈 Digital Marketing Workshop on SEO Trends - Register Now!</span>
+                    <span class="mx-8">🎬 Exciting New Video Production Service Launched! Contact us for details.</span>
+                    <span class="mx-8">🚀 Expanding Our Team! We're hiring talented designers and marketers.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section (Dark Theme) -->
+    <footer class="bg-gray-900 text-gray-300 p-8 text-center rounded-t-lg mt-4">
+        <div class="container mx-auto">
+            <p>&copy; All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript for Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+        });
+
+        closeMobileMenuButton.addEventListener('click', (event) => {
+            // Prevent the click event from propagating to elements underneath
+            // இந்த வரி, மொபைல் மெனுவில் உள்ள 'X' பட்டனைக் கிளிக் செய்யும்போது,
+            // கிளிக் நிகழ்வு அதன் கீழ் உள்ள மற்ற உறுப்புகளுக்குப் பரவாமல் தடுக்கிறது.
+            // இதனால் மெனு சரியாக மூடும், வேறு பக்கத்திற்குச் செல்லாது.
+            event.stopPropagation();
+            mobileMenu.classList.add('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Function to toggle visibility of sections
+        function toggleSection(targetId, buttonId) {
+            const targetDiv = document.getElementById(targetId);
+            const toggleButton = document.getElementById(buttonId);
+
+            if (targetDiv && toggleButton) {
+                // Toggle the 'hidden' class
+                targetDiv.classList.toggle('hidden');
+
+                // Update button text
+                if (targetDiv.classList.contains('hidden')) {
+                    toggleButton.textContent = `View All ${buttonId.includes('Portfolio') ? 'Projects' : 'Videos'}`;
+                } else {
+                    toggleButton.textContent = `Show Less ${buttonId.includes('Portfolio') ? 'Projects' : 'Videos'}`;
+                }
+            }
+        }
+
+        // Attach event listeners to the buttons
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('togglePortfolio').addEventListener('click', () => {
+                toggleSection('more-portfolio-items', 'togglePortfolio');
+            });
+
+            document.getElementById('toggleVideos').addEventListener('click', () => {
+                toggleSection('more-video-items', 'toggleVideos');
+            });
+        });
+    </script>
+    <!-- AUTH MODAL -->
+<div id="authModal"
+     style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); 
+            align-items:center; justify-content:center; z-index:9999;">
+  <div style="background:#fff; padding:20px; border-radius:12px; width:92%; max-width:420px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 id="authTitle" style="font-size:1.3rem; margin:0;">Login</h3>
+      <button id="closeAuth"
+        style="background:none; border:0; font-size:1.8rem; cursor:pointer;">×</button>
+    </div>
+
+    <form id="authForm" style="margin-top:10px;">
+      <input id="authEmail" type="email" placeholder="Email"
+             required style="width:100%; padding:10px; margin-top:10px; border-radius:8px; border:1px solid #ddd;" />
+      <input id="authPassword" type="password" placeholder="Password"
+             required style="width:100%; padding:10px; margin-top:10px; border-radius:8px; border:1px solid #ddd;" />
+
+      <div id="extraSignupFields" style="display:none;">
+        <input id="authName" type="text" placeholder="Full Name"
+               style="width:100%; padding:10px; margin-top:10px; border-radius:8px; border:1px solid #ddd;" />
+      </div>
+
+      <button id="authSubmit" type="submit"
+              style="margin-top:15px; padding:10px; width:100%; background:#2563eb; color:white; border:0; border-radius:8px;">
+        Submit
+      </button>
+
+      <p id="authMsg" style="display:none; margin-top:10px; color:#e11d48; font-size:0.9rem;"></p>
+
+      <p style="margin-top:10px; text-align:center;">
+        <a id="toggleAuthMode" href="#" style="color:#2563eb;">Create new account</a>
+      </p>
+    </form>
+  </div>
+</div>
+<!-- paste this BEFORE </body> (replace your existing auth script) -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const API_BASE = "http://localhost:4000/api";
+
+  // elements (desktop + mobile)
+  const loginBtn = document.getElementById('loginBtn');
+  const signupBtn = document.getElementById('signupBtn');
+  const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+  const mobileSignupBtn = document.getElementById('mobileSignupBtn');
+
+  // modal elements
+  const authModal = document.getElementById('authModal');
+  const closeAuth = document.getElementById('closeAuth');
+  const toggleAuthMode = document.getElementById('toggleAuthMode');
+  const extraSignupFields = document.getElementById('extraSignupFields');
+  const authForm = document.getElementById('authForm');
+  const authTitle = document.getElementById('authTitle');
+  const authMsg = document.getElementById('authMsg');
+
+  let mode = "login";
+
+  // small helper: parse JWT payload (client-side)
+  function parseJwt(token) {
+    try {
+      const payload = token.split('.')[1];
+      const json = atob(payload.replace(/-/g,'+').replace(/_/g,'/'));
+      return JSON.parse(json);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // create initials from a name string
+  function initialsFromName(name) {
+    if (!name) return '?';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].slice(0,1).toUpperCase();
+    return (parts[0][0] + parts[parts.length-1][0]).slice(0,2).toUpperCase();
+  }
+
+  /* -------- OPEN/CLOSE MODAL -------- */
+  function openAuth(type) {
+    mode = type;
+    if (authTitle) authTitle.textContent = mode === "login" ? "Login" : "Sign Up";
+    if (toggleAuthMode) toggleAuthMode.textContent = mode === "login" ? "Create new account" : "Already have an account? Login";
+    if (extraSignupFields) extraSignupFields.style.display = mode === "login" ? "none" : "block";
+    if (authMsg) authMsg.style.display = "none";
+    if (authModal) authModal.style.display = "flex";
+  }
+
+  closeAuth?.addEventListener("click", () => { if (authModal) authModal.style.display = "none"; });
+  toggleAuthMode?.addEventListener("click", (e) => { e.preventDefault(); openAuth(mode === "login" ? "signup" : "login"); });
+
+  function attachAuthButton(btn, type) {
+    if (!btn) return;
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      document.getElementById("mobile-menu")?.classList.add("hidden");
+      openAuth(type);
+    });
+  }
+
+  attachAuthButton(loginBtn, "login");
+  attachAuthButton(signupBtn, "signup");
+  attachAuthButton(mobileLoginBtn, "login");
+  attachAuthButton(mobileSignupBtn, "signup");
+
+  /* -------- FORM SUBMIT -------- */
+  authForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (authMsg) authMsg.style.display = "none";
+
+    const email = document.getElementById("authEmail")?.value?.trim();
+    const password = document.getElementById("authPassword")?.value;
+    const name = document.getElementById("authName")?.value?.trim();
+
+    const url = mode === "login" ? `${API_BASE}/auth/login` : `${API_BASE}/auth/signup`;
+    const body = mode === "login" ? { email, password } : { email, password, name };
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Error");
+
+      // store token
+      localStorage.setItem('token', data.token);
+
+      // if user signed up and provided name, save it locally so we can show the real name
+      if (mode === "signup" && name) {
+        localStorage.setItem('userName', name);
+      }
+
+      // on login, if we don't have a saved name, derive from token payload/email
+      if (mode === "login" && !localStorage.getItem('userName')) {
+        const payload = parseJwt(data.token);
+        const em = payload?.email;
+        if (em) {
+          const derived = em.split('@')[0];
+          localStorage.setItem('userName', derived);
+        }
+      }
+
+      if (authModal) authModal.style.display = "none";
+      updateUI();
+    } catch (err) {
+      if (authMsg) {
+        authMsg.textContent = err.message || 'Request failed';
+        authMsg.style.display = "block";
+      }
+    }
+  });
+
+  /* -------- NAVBAR UPDATE AFTER LOGIN -------- */
+  function updateUI() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    // remove desktop login/signup buttons if present
+    loginBtn?.remove();
+    signupBtn?.remove();
+
+    // get display name: prefer saved userName, else derive from token email
+    let displayName = localStorage.getItem('userName') || '';
+    if (!displayName) {
+      const payload = parseJwt(token);
+      if (payload?.email) displayName = payload.email.split('@')[0];
+    }
+    if (!displayName) displayName = 'User';
+
+    // create avatar initials
+    const initials = initialsFromName(displayName);
+
+    // --- 1) Desktop header: show avatar + name + logout (hidden on small screens) ---
+    const headerContainer = document.querySelector('header .container') || document.querySelector('header');
+    if (headerContainer) {
+      // remove previous
+      const old = headerContainer.querySelector('.vix-account-wrap');
+      if (old) old.remove();
+
+      // wrapper with classes: hidden on small screens, visible on md+ (Tailwind md = 768px)
+      const wrap = document.createElement('div');
+// make avatar + logout visible on all sizes; hide full name on small screens via CSS
+wrap.className = 'vix-account-wrap flex items-center space-x-3 ml-4';
+
+      // avatar circle
+      const avatar = document.createElement('div');
+      avatar.className = 'vix-avatar';
+      avatar.style.cssText = 'width:36px;height:36px;border-radius:999px;background:#e6f0ff;display:flex;align-items:center;justify-content:center;font-weight:700;color:#1e40af;';
+      avatar.textContent = initials;
+
+      // name text
+      const nameEl = document.createElement('span');
+      nameEl.textContent = displayName;
+      nameEl.style.cssText = 'color:#1e40af;font-weight:600;cursor:pointer;';
+      nameEl.onclick = () => { alert('Open account / profile UI'); };
+
+      // logout
+      const logout = document.createElement('button');
+      logout.textContent = 'Logout';
+      logout.style.cssText = 'background:#dc2626;color:white;padding:6px 12px;border-radius:6px;border:0;font-weight:600;';
+      logout.onclick = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userName');
+        location.reload();
+      };
+
+      wrap.appendChild(avatar);
+      wrap.appendChild(nameEl);
+      wrap.appendChild(logout);
+
+      // Insert before mobile menu button if present so layout is stable
+      const mobileBtn = headerContainer.querySelector('#mobile-menu-button');
+      if (mobileBtn) headerContainer.insertBefore(wrap, mobileBtn);
+      else headerContainer.appendChild(wrap);
+    }
+
+    // --- 2) Mobile menu: add a top account block (visible only inside mobile menu) ---
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenu) {
+      // remove old mobile block
+      const oldMobile = mobileMenu.querySelector('.vix-account-wrap-mobile');
+      if (oldMobile) oldMobile.remove();
+
+      const mwrap = document.createElement('div');
+      mwrap.className = 'vix-account-wrap-mobile flex items-center space-x-3 mb-6 px-4';
+
+      const mavatar = document.createElement('div');
+      mavatar.className = 'vix-avatar-mobile';
+      mavatar.style.cssText = 'width:40px;height:40px;border-radius:999px;background:#e6f0ff;display:flex;align-items:center;justify-content:center;font-weight:700;color:#1e40af;margin-right:8px;';
+      mavatar.textContent = initials;
+
+      const mname = document.createElement('div');
+      mname.style.cssText = 'color:white;font-weight:600;';
+      mname.textContent = displayName;
+
+      const mlogout = document.createElement('button');
+      mlogout.textContent = 'Logout';
+      mlogout.className = 'ml-auto bg-red-600 text-white px-4 py-2 rounded';
+      mlogout.onclick = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userName');
+        location.reload();
+      };
+
+      mwrap.appendChild(mavatar);
+      mwrap.appendChild(mname);
+      mwrap.appendChild(mlogout);
+
+      // insert at top of mobile menu content
+      mobileMenu.insertBefore(mwrap, mobileMenu.firstChild);
+    }
+  }
+
+  // run on load (if token already present)
+  updateUI();
+});
+</script>
+<style>
+/* hide the name on small screens, show on md and up */
+.vix-name { display: none; }
+/* show on md and larger (tailwind md = 768px) */
+@media (min-width: 768px) {
+  .vix-name { display: inline; }
+}
+
+/* small adjustments for header controls on mobile */
+.vix-account-wrap button {
+  /* default size for logout */
+  font-weight:600;
+}
+@media (max-width: 767px) {
+  .vix-account-wrap button {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+  .vix-avatar {
+    width:32px!important;
+    height:32px!important;
+    font-weight:700;
+  }
+}
+</style>
+
+<!-- ACCOUNT / PROFILE MODAL (paste near your other modals, before </body>) -->
+<div id="profileModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); align-items:center; justify-content:center; z-index:10000;">
+  <div style="background:#fff; padding:18px; border-radius:12px; width:92%; max-width:420px; box-shadow:0 10px 30px rgba(0,0,0,0.25);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 id="profileTitle" style="font-size:1.2rem; margin:0;">My Account</h3>
+      <button id="closeProfile" style="background:none; border:0; font-size:1.5rem; cursor:pointer;">×</button>
+    </div>
+
+    <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px;">
+      <div id="profileAvatar" style="width:56px;height:56px;border-radius:999px;background:#e6f0ff;display:flex;align-items:center;justify-content:center;font-weight:700;color:#1e40af;font-size:18px;"></div>
+      <div style="flex:1;">
+        <div id="profileName" style="font-weight:700; color:#111; font-size:1rem;"></div>
+        <div id="profileEmail" style="font-size:0.9rem; color:#666;"></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label style="font-size:0.85rem; color:#333; display:block; margin-bottom:6px;">Display name (local)</label>
+      <input id="profileNameInput" type="text" placeholder="Enter display name" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;" />
+    </div>
+
+    <div style="font-size:0.85rem; color:#444; margin-bottom:12px;">
+      <div><strong>UID:</strong> <span id="profileUid" style="color:#666; font-size:0.9rem;"></span></div>
+    </div>
+
+    <div style="display:flex; gap:10px; justify-content:flex-end;">
+      <button id="profileSave" style="background:#2563eb;color:white;padding:8px 12px;border-radius:8px;border:0;">Save</button>
+      <button id="profileLogout" style="background:#dc2626;color:white;padding:8px 12px;border-radius:8px;border:0;">Logout</button>
+    </div>
+  </div>
+</div>
+
+
+
+</body>
+
+</html>

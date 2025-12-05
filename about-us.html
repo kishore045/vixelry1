@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Vixelry</title>
+    <link rel="icon" type="image/png" href="vixelry.logo.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            @apply bg-gray-50 text-gray-800; /* Light theme by default */
+        }
+        .btn-primary {
+            @apply bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-300 ease-in-out;
+        }
+        /* Dark theme styles */
+        body.dark {
+            @apply bg-gray-900 text-gray-100;
+        }
+        .dark .bg-white {
+            @apply bg-gray-800;
+        }
+        .dark .text-gray-800 {
+            @apply text-gray-100;
+        }
+        .dark .text-gray-700 {
+            @apply text-gray-200;
+        }
+        .dark .border-gray-200 {
+            @apply border-gray-700;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="index.html" class="flex items-centers">
+                 <img src="vixelry.png" alt="Vixelry Logo" class="h-30 md:h-32 md:h-20 max-w-[120px] md:max-w-[160px] lg:max-w-[200px] w-full h-auto">
+            </a>
+
+            <!-- Navigation (Desktop) -->
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-600 hover:text-blue-600 font-medium transition duration-300">Home</a>
+                <a href="services.html" class="text-gray-600 hover:text-blue-600 font-medium transition duration-300">Services</a>
+                <a href="about-us.html" class="text-blue-600 font-medium transition duration-300">About Us</a>
+                <a href="categories.html" class="text-gray-600 hover:text-blue-600 font-medium transition duration-300">Categories</a>
+                <a href="contact.html" class="text-gray-600 hover:text-blue-600 font-medium transition duration-300">Contact</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-blue-600 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation (Hidden by default) -->
+        <nav id="mobile-menu" class="md:hidden bg-white px-4 pt-2 pb-4 space-y-2 hidden">
+            <a href="index.html" class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Home</a>
+            <a href="services.html" class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Services</a>
+            <a href="about-us.html" class="block text-blue-600 font-medium py-2 transition duration-300">About Us</a>
+            <a href="categories.html" class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Categories</a>
+            <a href="contact.html" class="block text-gray-600 hover:text-blue-600 font-medium py-2 transition duration-300">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Main Content - About Us Section -->
+   <main class="container mx-auto px-4 py-8 pt-40">
+        <h1 class="text-3xl font-bold text-center mb-8 text-gray-800 mt-25 md:mt-25 lg:mt-25 pt-12 md:pt-12 lg:pt-12">About Vixelry - Your Creative Partner</h1>
+
+        <div class="flex flex-col lg:flex-row items-center lg:space-x-10 mb-12">
+            <div class="lg:w-1/2 mb-8 lg:mb-0">
+                <img src="https://placehold.co/800x500/E0F2F7/2C3E50?text=Creative+Design+Workspace" alt="Creative Design Workspace" class="rounded-xl shadow-md w-full h-auto">
+            </div>
+            <div class="lg:w-1/2 text-center lg:text-left">
+                <p class="text-gray-700 text-lg leading-loose mb-4">
+                    Vixelry is more than just a resource hub; we are a passionate collective of design enthusiasts and tech innovators. Our journey began with a simple yet powerful vision: to democratize design by offering high-quality, free resources to creatives worldwide. We believe that talent should never be limited by access to tools.
+                </p>
+                <p class="text-gray-700 text-lg leading-loose mb-4">
+                    Since our inception in [Year of Establishment - e.g., 2020], we've meticulously curated and created a vast library of PSDs, UI kits, templates, icons, and more. Our commitment extends beyond just providing files; we aim to foster a vibrant community where designers can learn, share, and grow.
+                </p>
+                <p class="text-gray-700 text-lg leading-loose">
+                    We constantly strive to stay ahead of design trends, ensuring our resources are fresh, relevant, and inspiring. Join Vixelry and let's embark on a creative journey together, turning ideas into stunning realities.
+                </p>
+            </div>
+        </div>
+
+        <div class="text-center mt-12">
+            <h2 class="text-2xl font-bold mb-6">Our Core Values</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-100 p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold mb-2">Accessibility</h3>
+                    <p class="text-gray-700">Making premium design resources available to everyone, regardless of their budget or experience level.</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold mb-2">Innovation</h3>
+                    <p class="text-gray-700">Continuously exploring new design trends and technologies to provide cutting-edge resources.</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-semibold mb-2">Community</h3>
+                    <p class="text-gray-700">Building a supportive environment where designers can connect, collaborate, and inspire each other.</p>
+                </div>
+            </div>
+        </div>
+         <div id="whatsappButton" class="fixed bottom-10 right-10 bg-white rounded-full animate-bounce transition translate-x-2 "><button
+            type="button" class="flex justify-center items-center"><svg stroke="currentColor" fill="currentColor"
+                stroke-width="0" viewBox="0 0 24 24" class="text-green-500  text-5xl lg:text-7xl " height="1em"
+                width="1em" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M12.001 2C17.5238 2 22.001 6.47715 22.001 
+                    12C22.001 17.5228 17.5238 22 12.001 22C10.1671 22 8.44851 21.5064 6.97086 20.6447L2.00516 
+                    22L3.35712 17.0315C2.49494 15.5536 2.00098 13.8345 2.00098 12C2.00098 6.47715 6.47813 2 12.001 2ZM8.59339
+                     7.30019L8.39232 7.30833C8.26293 7.31742 8.13607 7.34902 8.02057 7.40811C7.93392 7.45244 7.85348 7.51651 
+                     7.72709 7.63586C7.60774 7.74855 7.53857 7.84697 7.46569 7.94186C7.09599 8.4232 6.89729 9.01405 6.90098 
+                     9.62098C6.90299 10.1116 7.03043 10.5884 7.23169 11.0336C7.63982 11.9364 8.31288 12.8908 9.20194 
+                     13.7759C9.4155 13.9885 9.62473 14.2034 9.85034 14.402C10.9538 15.3736 12.2688 16.0742 13.6907 
+                     16.4482C13.6907 16.4482 14.2507 16.5342 14.2589 16.5347C14.4444 16.5447 14.6296 16.5313 14.8153 
+                     16.5218C15.1066 16.5068 15.391 16.428 15.6484 16.2909C15.8139 16.2028 15.8922 16.159 16.0311 16.0714C16.0311
+                      16.0714 16.0737 16.0426 16.1559 15.9814C16.2909 15.8808 16.3743 15.81 16.4866 15.6934C16.5694 15.6074
+                       16.6406 15.5058 16.6956 15.3913C16.7738 15.2281 16.8525 14.9166 16.8838 14.6579C16.9077 14.4603 16.9005
+                        14.3523 16.8979 14.2854C16.8936 14.1778 16.8047 14.0671 16.7073 14.0201L16.1258 13.7587C16.1258 13.7587
+                         15.2563 13.3803 14.7245 13.1377C14.6691 13.1124 14.6085 13.1007 14.5476 13.097C14.4142 13.0888 14.2647
+                          13.1236 14.1696 13.2238C14.1646 13.2218 14.0984 13.279 13.3749 14.1555C13.335 14.2032 13.2415 14.3069
+                           13.0798 14.2972C13.0554 14.2955 13.0311 14.292 13.0074 14.2858C12.9419 14.2685 12.8781 14.2457 12.8157 14.2193C12.692 14.1668 12.6486 14.1469 12.5641 14.1105C11.9868 13.8583 11.457 13.5209 10.9887 13.108C10.8631 12.9974 10.7463 12.8783 10.6259 12.7616C10.2057 12.3543 9.86169 11.9211 9.60577 11.4938C9.5918 11.4705 9.57027 11.4368 9.54708 11.3991C9.50521 11.331 9.45903 11.25 9.44455 11.1944C9.40738 11.0473 9.50599
+                            10.9291 9.50599 10.9291C9.50599 10.9291 9.74939 10.663 9.86248 10.5183C9.97128 10.379
+                             10.0652 10.2428 10.125 10.1457C10.2428 9.95633 10.2801 9.76062 10.2182 9.60963C9.93764 8.92565
+                              9.64818 8.24536 9.34986 7.56894C9.29098
+                            7.43545 9.11585 7.33846 8.95659 7.32007C8.90265 7.31384 8.84875 7.30758 8.79459 7.30402C8.66053
+                             7.29748 8.5262 7.29892 8.39232 7.30833L8.59339 7.30019Z">
+                </path>
+            </svg></button></div>
+            <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const whatsappButton = document.getElementById('whatsappButton');
+
+    if (whatsappButton) {
+        whatsappButton.addEventListener('click', function() {
+            const phoneNumber = '8667089505'; // <-- Update your number here
+            const whatsappLink = `https://wa.me/${phoneNumber}`;
+
+            window.open(whatsappLink, '_blank');
+        });
+    }
+});
+
+</script>
+<div id="emailButton" class="fixed bottom-28 right-10 bg-white rounded-full animate-bounce transition translate-x-2 cursor-pointer">
+    <button type="button" class="flex justify-center items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="text-red-500 text-5xl lg:text-7xl" viewBox="0 0 24 24" width="1em" height="1em">
+            <path d="M20 4H4C2.89 4 2.01 4.9 2.01 6L2 18c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+        </svg>
+    </button>
+    <script>
+        document.getElementById('emailButton').addEventListener('click', function() {
+    const email = 'vixlery@gmail.com';
+    const subject = 'Inquiry from Website';
+    const body = 'Hello, I would like to know more about your services.';
+
+    const gmailLink = `https://mail.google.com/mail/?view=cm&to=${email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.open(gmailLink, '_blank');
+});
+
+    </script>
+</div>
+
+            
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 Vixelry. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-2">
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript for mobile menu toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
